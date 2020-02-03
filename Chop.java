@@ -1,5 +1,7 @@
+import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.map.Area;
 import org.dreambot.api.methods.map.Map;
+import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
@@ -17,8 +19,17 @@ public class Chop extends AbstractScript
     {
       if (getInventory().isFull())
       {
+
+        int playerX = getLocalPlayer().getX();
+        int playerY = getLocalPlayer().getY();
+        Tile next = new Tile(playerX + 1, playerY + 1);
+
+        GameObject fire = getGameObjects().closest("Fire");
+        if (getLocalPlayer().getTile().equals(fire.getTile()))
+          getWalking().walk(next);
         getInventory().get("Tinderbox").useOn("Logs");
         sleep(3000);
+
       }
       if (!getLocalPlayer().isAnimating())
       {
@@ -31,7 +42,7 @@ public class Chop extends AbstractScript
     }
     else
     {
-      getWalking().walk(treeArea.getRandomTile());
+      getWalking().walk(treeArea.getCenter());
     }
     return 1000;
   }
